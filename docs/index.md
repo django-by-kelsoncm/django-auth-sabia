@@ -16,6 +16,7 @@ Welcome to the `django-sabia-auth` documentation.
 
 - [Installation](installation.md)
 - [Configuration](configuration.md)
+- [Scopes](scopes.md)
 - [Usage](usage.md)
 - [API Reference](api-reference.md)
 - [Changelog](changelog.md)

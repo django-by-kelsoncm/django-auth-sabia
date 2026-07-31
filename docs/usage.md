@@ -20,7 +20,9 @@ This registers two endpoints:
 ## Template Login Button
 
 ```html
+{% raw %}
 <a href="{% url 'sabia_auth:login' %}">Login com Sabiá</a>
+{% endraw %}
 ```
 
 ## User Model Integration
