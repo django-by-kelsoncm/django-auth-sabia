@@ -27,6 +27,12 @@ def resolve_callable_or_class(target):
     raise TypeError(f"Expected callable, class, or import path string, got {type(target)}")
 
 
+def resolve_callable(target):
+    """Resolve a callable, class, or import path string (backward compatible name)."""
+    return resolve_callable_or_class(target)
+
+
+
 def _call_transformer(fn, raw_val, user_info):
     """Call a transformer function trying flexible argument signatures."""
     sig = inspect.signature(fn)
