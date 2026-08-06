@@ -21,5 +21,5 @@ Welcome to the `django-sabia-auth` documentation.
 - [Mappers](mappers.md)
 - [Scopes](scopes.md)
 - [Usage](usage.md)
-- [API reference](api-reference.md)
+- [API  reference](api-reference.md)
 - [Changelog](changelog.md)
