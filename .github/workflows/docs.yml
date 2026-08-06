@@ -6,7 +6,9 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
@@ -30,8 +32,6 @@ jobs:
           mkdocs build
           touch site/.nojekyll
 
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
