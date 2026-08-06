@@ -31,7 +31,6 @@ class SabiaAuthBackend:
 
         # Separate the lookup key from the remaining defaults.
         defaults = {k: v for k, v in attrs.items() if k != lookup_field}
-        defaults.setdefault("is_active", True)
 
         user, created = User.objects.get_or_create(
             **{lookup_field: lookup_value},

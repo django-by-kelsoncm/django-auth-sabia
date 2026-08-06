@@ -18,7 +18,7 @@
 | `SABIA_USER_LOOKUP_FIELD` | `"username"` | User model field used to look up/create users |
 | `SABIA_USER_ATTR_MAP`     | see below | Maps Sabiá response keys to user model fields |
 | `SABIA_USER_INFO_FETCHERS` | `["django_sabia_auth.fetchers.DefaultEndpointsUserInfoFetcher"]` | List of fetcher classes in Chain of Responsibility |
-| `SABIA_USER_INFO_ENDPOINTS` | `["/api/v1/userinfo"]` | List of Sabiá API endpoints to query and merge |
+| `SABIA_USER_INFO_ENDPOINTS` | `["/api/perfil/dados/"]` | List of Sabiá API endpoints to query and merge |
 | `SABIA_USER_INFO_MAPPERS` | `["django_sabia_auth.mappers.DefaultAttrMapUserMapper"]` | List of mapper classes in Chain of Responsibility |
 | `SABIA_USER_MAPPER`       | `"django_sabia_auth.mappers.DefaultSabiaUserMapper"` | Custom mapper class path or class (legacy alias) |
 

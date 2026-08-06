@@ -1,5 +1,6 @@
 import inspect
 import logging
+from .exceptions import SabiaUserInfoError
 
 from django.utils.module_loading import import_string
 
@@ -46,7 +47,9 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                     url_path = endpoint_spec
                     data = client.get_endpoint_data(access_token, url_path)
                     if isinstance(data, dict):
-                        user_info.update(data)
+                        # Skip dictionaries that contain an error indicator
+                        if "erro" not in data:
+                            user_info.update(data)
 
                 elif isinstance(endpoint_spec, dict):
                     url_path = endpoint_spec.get("endpoint")
@@ -66,11 +69,13 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                     if namespace:
                         user_info[namespace] = data_to_store
                     elif isinstance(data_to_store, dict):
-                        user_info.update(data_to_store)
+                        # Skip dictionaries that indicate an error via an "erro" key
+                        if "erro" not in data_to_store:
+                            user_info.update(data_to_store)
             except Exception as exc:
+                if isinstance(exc, SabiaUserInfoError):
+                    raise
                 logger.warning("Failed to fetch Sabiá user info endpoint '%s': %s", endpoint_spec, exc)
-                # Re‑raise to allow the client to surface SabiaUserInfoError
-                raise
 
         return user_info
 

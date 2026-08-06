@@ -1,6 +1,6 @@
 # Fetchers (Busca de Dados do Sabiá)
 
-O `django-sabia-auth` utiliza o padrão **Chain of Responsibility (Cadeia de Responsabilidade)** para consultar o endpoint `/api/v1/userinfo` do Sabiá (provedor de identidade do SUS) e endpoints adicionais de APIs ou sistemas corporativos.
+O `django-sabia-auth` utiliza o padrão **Chain of Responsibility (Cadeia de Responsabilidade)** para consultar o endpoint `/api/perfil/dados/` do Sabiá (provedor de identidade do SUS) e endpoints adicionais de APIs ou sistemas corporativos.
 
 ---
 
@@ -10,7 +10,7 @@ Após a autenticação via OAuth2, o `access_token` é obtido e a cadeia de fetc
 
 ```
 [Access Token] ──> Fetcher 1 (DefaultEndpointsUserInfoFetcher)
-                       │ user_info obtido do /api/v1/userinfo
+                       │ user_info obtido do /api/perfil/dados/
                        ▼
                    Fetcher 2 (Fetcher Customizado / LDAP)
                        │ user_info final
@@ -39,21 +39,21 @@ SABIA_USER_INFO_FETCHERS = [
 
 ## Fetcher Padrão: `DefaultEndpointsUserInfoFetcher`
 
-O fetcher padrão consome a lista `SABIA_USER_INFO_ENDPOINTS` (por padrão `["/api/v1/userinfo"]`) e efetua chamadas autorizadas para cada endpoint.
+O fetcher padrão consome a lista `SABIA_USER_INFO_ENDPOINTS` (por padrão `["/api/perfil/dados/"]`) e efetua chamadas autorizadas para cada endpoint.
 
 ### Formatos de Endpoints Suportados (`SABIA_USER_INFO_ENDPOINTS`)
 
 #### 1. Endpoint Simples (String)
 ```python
 SABIA_USER_INFO_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
 ]
 ```
 
 #### 2. Endpoint com Formatação Dinâmica (String com `{chave}`)
 ```python
 SABIA_USER_INFO_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
     "/api/v1/profissionais/{cpf}/vinculos/",
 ]
 ```
@@ -64,7 +64,7 @@ Permite isolar respostas sob um *namespace*, extrair listas de respostas paginad
 
 ```python
 SABIA_USER_INFO_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
     {
         "endpoint": "/api/v1/estabelecimentos/",
         "namespace": "estabelecimentos",

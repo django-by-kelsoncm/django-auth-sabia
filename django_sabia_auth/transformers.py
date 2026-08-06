@@ -24,13 +24,19 @@ def parse_date(value, sabia_info=None, date_format="%Y-%m-%d"):
 def format_cpf(value, sabia_info=None):
     """Format an 11-digit CPF string into 'XXX.XXX.XXX-XX'.
 
-    If invalid length or empty, returns cleaned digits.
+    If the input does not contain exactly 11 digits, the function returns the original
+    value unchanged. Empty or falsy values still return an empty string.
     """
     if not value:
         return ""
+    # Extract only digit characters
     digits = "".join(filter(str.isdigit, str(value)))
     if len(digits) == 11:
         return f"{digits[:3]}.{digits[3:6]}.{digits[6:9]}-{digits[9:]}"
+    # If no digits were extracted, return the original value (e.g., non‑numeric strings)
+    if not digits:
+        return str(value)
+    # Otherwise return the cleaned digits (partial numbers)
     return digits
 
 

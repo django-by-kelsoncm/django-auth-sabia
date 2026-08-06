@@ -10,7 +10,7 @@ O elo padrão `DefaultEndpointsUserInfoFetcher` consome os endpoints listados em
 
 ```python
 SABIA_USER_INFO_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
 ]
 ```
 
