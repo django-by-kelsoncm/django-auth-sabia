@@ -2,7 +2,7 @@
 
 Welcome to the `django-sabia-auth` documentation.
 
-`django-sabia-auth` provides Django OAuth2 authentication integration with **Sabiá**, the identity provider for Brazil's SUS (Sistema Único de Saúde).
+`django-sabia-auth` provides Django OAuth2 authentication integration with **Sabiá**, the identity provider for Brazil's SUS (Unified Health System).
 
 ## Features
 
