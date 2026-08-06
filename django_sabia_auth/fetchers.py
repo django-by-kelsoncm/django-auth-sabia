@@ -6,7 +6,7 @@ from django.utils.module_loading import import_string
 logger = logging.getLogger(__name__)
 
 DEFAULT_SABIA_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
 ]
 
 
@@ -69,6 +69,8 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                         user_info.update(data_to_store)
             except Exception as exc:
                 logger.warning("Failed to fetch Sabiá user info endpoint '%s': %s", endpoint_spec, exc)
+                # Re‑raise to allow the client to surface SabiaUserInfoError
+                raise
 
         return user_info
 

@@ -63,15 +63,22 @@ class SabiaOAuth2Client:
         data = {"scope": " ".join(self.scopes)}
         try:
             response = self._session.post(url, headers=headers, data=data, timeout=timeout)
-            response.raise_for_status()
+            # If the POST succeeds but returns an error status, surface it directly.
+            if not response.ok:
+                raise SabiaUserInfoError(
+                    f"Failed to fetch endpoint '{path_or_url}': HTTP {response.status_code}" 
+                )
             return response.json()
-        except Exception:
+        except Exception as exc:
+            # Fallback to GET only for connection‑related issues (e.g., network errors).
             try:
                 response = self._session.get(url, headers=headers, timeout=timeout)
                 response.raise_for_status()
                 return response.json()
-            except Exception as exc:
-                raise SabiaUserInfoError(f"Failed to fetch endpoint '{path_or_url}': {exc}") from exc
+            except Exception as get_exc:
+                raise SabiaUserInfoError(
+                    f"Failed to fetch endpoint '{path_or_url}': {get_exc}" 
+                ) from get_exc
 
     def get_user_info(self, access_token, timeout=30):
         """Fetch the authenticated user's profile from Sabiá via the fetcher chain."""

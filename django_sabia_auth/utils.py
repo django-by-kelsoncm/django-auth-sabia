@@ -10,7 +10,7 @@ DEFAULT_USER_ATTR_MAP = {
 }
 
 DEFAULT_SABIA_ENDPOINTS = [
-    "/api/v1/userinfo",
+    "/api/perfil/dados/",
 ]
 
 
