@@ -16,6 +16,9 @@ Welcome to the `django-sabia-auth` documentation.
 
 - [Installation](installation.md)
 - [Configuration](configuration.md)
+- [User Info Pipeline](user-info-pipeline.md)
+- [Fetchers (Busca de Dados)](fetchers.md)
+- [Mappers (Mapeamento)](mappers.md)
 - [Scopes](scopes.md)
 - [Usage](usage.md)
 - [API Reference](api-reference.md)
