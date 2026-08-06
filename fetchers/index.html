@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-sabia/fetchers/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Fetchers (Busca de Dados) - django-sabia-auth</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Fetchers (Busca de Dados)";
+        var mkdocs_page_input_path = "fetchers.md";
+        var mkdocs_page_url = "/django-auth-sabia/fetchers/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> django-sabia-auth
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user-info-pipeline/">Pipeline de Perfil de Usuário</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Fetchers (Busca de Dados)</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#como-funcionam-os-fetchers">Como Funcionam os Fetchers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuracao-sabia_user_info_fetchers">Configuração: SABIA_USER_INFO_FETCHERS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fetcher-padrao-defaultendpointsuserinfofetcher">Fetcher Padrão: DefaultEndpointsUserInfoFetcher</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#formatos-de-endpoints-suportados-sabia_user_info_endpoints">Formatos de Endpoints Suportados (SABIA_USER_INFO_ENDPOINTS)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#1-endpoint-simples-string">1. Endpoint Simples (String)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#2-endpoint-com-formatacao-dinamica-string-com-chave">2. Endpoint com Formatação Dinâmica (String com {chave})</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-especificacao-por-dicionario-dict-spec">3. Especificação por Dicionário (dict spec)</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#criando-um-fetcher-customizado">Criando um Fetcher Customizado</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#funcoes-utilitarias-da-api-de-fetchers">Funções Utilitárias da API de Fetchers</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mappers/">Mappers (Mapeamento)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scopes/">Scopes</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api-reference/">API Reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">django-sabia-auth</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Fetchers (Busca de Dados)</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/django-by-kelsoncm/django-auth-sabia/edit/master/docs/fetchers.md">Edit on django-by-kelsoncm/django-auth-sabia</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="fetchers-busca-de-dados-do-sabia">Fetchers (Busca de Dados do Sabiá)<a class="headerlink" href="#fetchers-busca-de-dados-do-sabia" title="Permanent link">&para;</a></h1>
+<p>O <code>django-sabia-auth</code> utiliza o padrão <strong>Chain of Responsibility (Cadeia de Responsabilidade)</strong> para consultar o endpoint <code>/api/v1/userinfo</code> do Sabiá (provedor de identidade do SUS) e endpoints adicionais de APIs ou sistemas corporativos.</p>
+<hr />
+<h2 id="como-funcionam-os-fetchers">Como Funcionam os Fetchers<a class="headerlink" href="#como-funcionam-os-fetchers" title="Permanent link">&para;</a></h2>
+<p>Após a autenticação via OAuth2, o <code>access_token</code> é obtido e a cadeia de fetchers (<code>SABIA_USER_INFO_FETCHERS</code>) é executada. Cada fetcher recebe o dicionário acumulado <code>user_info</code> e realiza chamadas HTTP ou consultas para enriquecê-lo.</p>
+<pre class="highlight"><code>[Access Token] ──&gt; Fetcher 1 (DefaultEndpointsUserInfoFetcher)
+                       │ user_info obtido do /api/v1/userinfo
+                       ▼
+                   Fetcher 2 (Fetcher Customizado / LDAP)
+                       │ user_info final
+                       ▼
+                   Cadeia de Mappers</code></pre>
+<hr />
+<h2 id="configuracao-sabia_user_info_fetchers">Configuração: <code>SABIA_USER_INFO_FETCHERS</code><a class="headerlink" href="#configuracao-sabia_user_info_fetchers" title="Permanent link">&para;</a></h2>
+<p>No <code>settings.py</code>, configure a lista de fetchers:</p>
+<pre class="highlight"><code class="language-python">SABIA_CLIENT_ID = "seu-client-id"
+SABIA_CLIENT_SECRET = "seu-client-secret"
+SABIA_REDIRECT_URI = "https://sua-app.com/auth/sabia/callback/"
+
+SABIA_USER_INFO_FETCHERS = [
+    "django_sabia_auth.fetchers.DefaultEndpointsUserInfoFetcher",
+    "meu_app.fetchers.ExternalLdapFetcher",
+]</code></pre>
+<hr />
+<h2 id="fetcher-padrao-defaultendpointsuserinfofetcher">Fetcher Padrão: <code>DefaultEndpointsUserInfoFetcher</code><a class="headerlink" href="#fetcher-padrao-defaultendpointsuserinfofetcher" title="Permanent link">&para;</a></h2>
+<p>O fetcher padrão consome a lista <code>SABIA_USER_INFO_ENDPOINTS</code> (por padrão <code>["/api/v1/userinfo"]</code>) e efetua chamadas autorizadas para cada endpoint.</p>
+<h3 id="formatos-de-endpoints-suportados-sabia_user_info_endpoints">Formatos de Endpoints Suportados (<code>SABIA_USER_INFO_ENDPOINTS</code>)<a class="headerlink" href="#formatos-de-endpoints-suportados-sabia_user_info_endpoints" title="Permanent link">&para;</a></h3>
+<h4 id="1-endpoint-simples-string">1. Endpoint Simples (String)<a class="headerlink" href="#1-endpoint-simples-string" title="Permanent link">&para;</a></h4>
+<pre class="highlight"><code class="language-python">SABIA_USER_INFO_ENDPOINTS = [
+    "/api/v1/userinfo",
+]</code></pre>
+<h4 id="2-endpoint-com-formatacao-dinamica-string-com-chave">2. Endpoint com Formatação Dinâmica (String com <code>{chave}</code>)<a class="headerlink" href="#2-endpoint-com-formatacao-dinamica-string-com-chave" title="Permanent link">&para;</a></h4>
+<p><pre class="highlight"><code class="language-python">SABIA_USER_INFO_ENDPOINTS = [
+    "/api/v1/userinfo",
+    "/api/v1/profissionais/{cpf}/vinculos/",
+]</code></pre>
+Chaves <code>{cpf}</code>, <code>{email}</code>, etc. são preenchidas dinamicamente a partir dos campos presentes em <code>user_info</code>.</p>
+<h4 id="3-especificacao-por-dicionario-dict-spec">3. Especificação por Dicionário (<code>dict</code> spec)<a class="headerlink" href="#3-especificacao-por-dicionario-dict-spec" title="Permanent link">&para;</a></h4>
+<p>Permite isolar respostas sob um <em>namespace</em>, extrair listas de respostas paginadas ou iterar sobre coleções:</p>
+<pre class="highlight"><code class="language-python">SABIA_USER_INFO_ENDPOINTS = [
+    "/api/v1/userinfo",
+    {
+        "endpoint": "/api/v1/estabelecimentos/",
+        "namespace": "estabelecimentos",
+        "extract_list": "results",
+    },
+    {
+        "endpoint": "/api/v1/estabelecimentos/{cnes}/detalhes/",
+        "namespace": "detalhes_cnes",
+        "for_each": "estabelecimentos", # Itera sobre cada item retornado
+    },
+]</code></pre>
+<hr />
+<h2 id="criando-um-fetcher-customizado">Criando um Fetcher Customizado<a class="headerlink" href="#criando-um-fetcher-customizado" title="Permanent link">&para;</a></h2>
+<p>Para criar um fetcher customizado, herde de <code>BaseUserInfoFetcher</code> e sobrescreva o método <code>fetch</code>:</p>
+<pre class="highlight"><code class="language-python"># meu_app/fetchers.py
+from django_sabia_auth.fetchers import BaseUserInfoFetcher
+
+class ExternalLdapFetcher(BaseUserInfoFetcher):
+    """Fetcher que enriquece os dados do profissional consultando o LDAP corporativo via CPF."""
+
+    def fetch(self, client, access_token, user_info=None):
+        user_info = super().fetch(client, access_token, user_info)
+
+        cpf = user_info.get("cpf")
+        if cpf:
+            user_info["ldap_info"] = meu_ldap.buscar_por_cpf(cpf)
+
+        return user_info</code></pre>
+<hr />
+<h2 id="funcoes-utilitarias-da-api-de-fetchers">Funções Utilitárias da API de Fetchers<a class="headerlink" href="#funcoes-utilitarias-da-api-de-fetchers" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>get_user_info_fetchers(cfg=None)</code>: retorna a lista de instâncias dos fetchers configurados.</li>
+<li><code>run_user_info_fetcher_chain(client, access_token, cfg=None)</code>: executa toda a cadeia de fetchers e retorna o dicionário <code>user_info</code> consolidado.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../user-info-pipeline/" class="btn btn-neutral float-left" title="Pipeline de Perfil de Usuário"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../mappers/" class="btn btn-neutral float-right" title="Mappers (Mapeamento)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-sabia" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-sabia</a>
+        </span>
+    
+    
+      <span><a href="../user-info-pipeline/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../mappers/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

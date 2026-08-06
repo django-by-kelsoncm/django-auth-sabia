@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-sabia/scopes/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Scopes - django-sabia-auth</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Scopes";
+        var mkdocs_page_input_path = "scopes.md";
+        var mkdocs_page_url = "/django-auth-sabia/scopes/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> django-sabia-auth
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user-info-pipeline/">Pipeline de Perfil de Usuário</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fetchers/">Fetchers (Busca de Dados)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mappers/">Mappers (Mapeamento)</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Scopes</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#scopes-obrigatorios">Scopes obrigatórios</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dados_publicos">dados_publicos</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cpf">cpf</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#email">email</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#scopes-opcionais">Scopes opcionais</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#receita_federal">receita_federal</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cnes">cnes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#experiencia_profissional">experiencia_profissional</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#formacao_academica">formacao_academica</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cursos_cdp">cursos_cdp</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#resumo-dos-scopes">Resumo dos scopes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mapeando-campos-para-o-seu-model-sabia_user_attr_map">Mapeando campos para o seu model (SABIA_USER_ATTR_MAP)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dividindo-o-nome-em-dois-campos">Dividindo o nome em dois campos</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#acessando-campos-de-scopes-opcionais-objeto">Acessando campos de scopes opcionais (objeto)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#salvando-o-json-completo-fulljson">Salvando o JSON completo (fulljson)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exemplo-model-com-campo-cpf-nativo-e-nome-unico">Exemplo: model com campo cpf nativo e nome único</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api-reference/">API Reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">django-sabia-auth</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Scopes</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/django-by-kelsoncm/django-auth-sabia/edit/master/docs/scopes.md">Edit on django-by-kelsoncm/django-auth-sabia</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="scopes-disponiveis">Scopes disponíveis<a class="headerlink" href="#scopes-disponiveis" title="Permanent link">&para;</a></h1>
+<p>O Sabiá expõe os dados do usuário por meio de <strong>scopes OAuth2</strong>. Ao solicitar um scope durante a
+autenticação, você recebe os campos correspondentes na resposta de <code>POST /api/perfil/dados/</code>, que
+é chamado automaticamente pelo <code>SabiaOAuth2Client.get_user_info()</code>.</p>
+<p>Configure os scopes desejados via <code>SABIA_SCOPES</code> nas suas settings:</p>
+<pre class="highlight"><code class="language-python">SABIA_SCOPES = ["cpf", "email", "dados_publicos", "receita_federal", "cnes",
+                "experiencia_profissional", "formacao_academica", "cursos_cdp"]</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Autorização por aplicação</p>
+<p>Cada scope precisa estar habilitado para a sua aplicação no painel do Sabiá. Solicitar um scope
+não autorizado retorna um erro ou simplesmente omite o campo da resposta.</p>
+</div>
+<hr />
+<h2 id="scopes-obrigatorios">Scopes obrigatórios<a class="headerlink" href="#scopes-obrigatorios" title="Permanent link">&para;</a></h2>
+<p>Estes scopes estão sempre presentes independentemente do que for solicitado.</p>
+<h3 id="dados_publicos"><code>dados_publicos</code><a class="headerlink" href="#dados_publicos" title="Permanent link">&para;</a></h3>
+<p>Perfil público — <strong>sempre retornado</strong>, mesmo que não listado em <code>SABIA_SCOPES</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td><code>"Maria Silva"</code></td>
+</tr>
+<tr>
+<td><code>avatar</code></td>
+<td>string (URL)</td>
+<td><code>"https://login.sabia.ufrn.br/media/avatars/1.jpg"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cpf"><code>cpf</code><a class="headerlink" href="#cpf" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpf</code></td>
+<td>string</td>
+<td><code>"12345678900"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="email"><code>email</code><a class="headerlink" href="#email" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td><code>"maria.silva@email.com"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta com os scopes obrigatórios:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "name": "Maria Silva",
+  "avatar": "https://login.sabia.ufrn.br/media/avatars/1.jpg",
+  "cpf": "12345678900",
+  "email": "maria.silva@email.com"
+}</code></pre>
+<hr />
+<h2 id="scopes-opcionais">Scopes opcionais<a class="headerlink" href="#scopes-opcionais" title="Permanent link">&para;</a></h2>
+<h3 id="receita_federal"><code>receita_federal</code><a class="headerlink" href="#receita_federal" title="Permanent link">&para;</a></h3>
+<p>Dados complementares vindos da Receita Federal. Requer que o usuário tenha validado seu cadastro
+via CPF. Estes dados são cacheados por até <strong>5 anos</strong> no servidor do Sabiá.</p>
+<p>Se o usuário não tiver validado, retorna:
+<pre class="highlight"><code class="language-json">{ "receita_federal": { "erro": "Dados deste usuário não foram validados pela Receita Federal." } }</code></pre></p>
+<p>Campos disponíveis (nomes originais do XML do webservice da Receita Federal):</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nome</code></td>
+<td>string</td>
+<td><code>"MARIA SILVA"</code></td>
+</tr>
+<tr>
+<td><code>dtNascimento</code></td>
+<td>string (AAAA-MM-DD)</td>
+<td><code>"1990-05-20"</code></td>
+</tr>
+<tr>
+<td><code>sexo</code></td>
+<td>string</td>
+<td><code>"F"</code></td>
+</tr>
+<tr>
+<td><code>mae</code></td>
+<td>string</td>
+<td><code>"ANA SILVA"</code></td>
+</tr>
+<tr>
+<td><code>noMunicipio</code></td>
+<td>string</td>
+<td><code>"NATAL"</code></td>
+</tr>
+<tr>
+<td><code>uf</code></td>
+<td>string</td>
+<td><code>"RN"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "receita_federal": {
+    "nome": "MARIA SILVA",
+    "dtNascimento": "1990-05-20",
+    "sexo": "F",
+    "mae": "ANA SILVA",
+    "noMunicipio": "NATAL",
+    "uf": "RN"
+  }
+}</code></pre>
+<hr />
+<h3 id="cnes"><code>cnes</code><a class="headerlink" href="#cnes" title="Permanent link">&para;</a></h3>
+<p>Perfil profissional completo a partir do CNES (Cadastro Nacional de Estabelecimentos de Saúde).
+Cacheado por <strong>7 dias</strong> no servidor do Sabiá.</p>
+<p>Retorna um objeto com a chave <code>vinculos</code>, que é uma lista de vínculos profissionais:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cnes</code></td>
+<td>string</td>
+<td><code>"2408102"</code></td>
+</tr>
+<tr>
+<td><code>noFant</code></td>
+<td>string</td>
+<td><code>"HOSPITAL DAS CLÍNICAS"</code></td>
+</tr>
+<tr>
+<td><code>coMun</code></td>
+<td>string</td>
+<td><code>"240810"</code></td>
+</tr>
+<tr>
+<td><code>noCBO</code></td>
+<td>string</td>
+<td><code>"Médico Clínico"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "cnes": {
+    "vinculos": [
+      {
+        "cnes": "2408102",
+        "noFant": "HOSPITAL DAS CLÍNICAS",
+        "coMun": "240810",
+        "noCBO": "Médico Clínico"
+      }
+    ]
+  }
+}</code></pre>
+<hr />
+<h3 id="experiencia_profissional"><code>experiencia_profissional</code><a class="headerlink" href="#experiencia_profissional" title="Permanent link">&para;</a></h3>
+<p>Experiências profissionais cadastradas pelo próprio usuário no Sabiá (complementadas
+automaticamente pelo CNES na primeira autenticação com o scope <code>cnes</code>). Dados <strong>sempre frescos</strong>
+do banco de dados.</p>
+<p>Retorna uma <strong>lista</strong> de objetos:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>estabelecimento</code></td>
+<td>string</td>
+<td><code>"Hospital das Clínicas"</code></td>
+</tr>
+<tr>
+<td><code>profissao</code></td>
+<td>string</td>
+<td><code>"Médico Clínico"</code></td>
+</tr>
+<tr>
+<td><code>data_inicio</code></td>
+<td>datetime / null</td>
+<td><code>"2020-01-15T00:00:00"</code></td>
+</tr>
+<tr>
+<td><code>data_fim</code></td>
+<td>datetime / null</td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>municipio</code></td>
+<td>string</td>
+<td><code>"Natal - RN"</code></td>
+</tr>
+<tr>
+<td><code>descricao</code></td>
+<td>string</td>
+<td><code>"Plantões na UTI"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "experiencia_profissional": [
+    {
+      "estabelecimento": "Hospital das Clínicas",
+      "profissao": "Médico Clínico",
+      "data_inicio": "2020-01-15T00:00:00",
+      "data_fim": null,
+      "municipio": "Natal - RN",
+      "descricao": ""
+    }
+  ]
+}</code></pre>
+<p>Se o usuário não tiver experiências cadastradas:
+<pre class="highlight"><code class="language-json">{ "experiencia_profissional": { "erro": "Nenhuma experiência profissional cadastrada." } }</code></pre></p>
+<hr />
+<h3 id="formacao_academica"><code>formacao_academica</code><a class="headerlink" href="#formacao_academica" title="Permanent link">&para;</a></h3>
+<p>Formação acadêmica cadastrada pelo usuário. Dados <strong>sempre frescos</strong> do banco de dados.</p>
+<p>Retorna uma <strong>lista</strong> de objetos:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>instituicao</code></td>
+<td>string</td>
+<td><code>"UFRN"</code></td>
+</tr>
+<tr>
+<td><code>curso</code></td>
+<td>string</td>
+<td><code>"Medicina"</code></td>
+</tr>
+<tr>
+<td><code>data_inicio</code></td>
+<td>date</td>
+<td><code>"2010-03-01"</code></td>
+</tr>
+<tr>
+<td><code>data_fim</code></td>
+<td>date / null</td>
+<td><code>"2016-12-01"</code></td>
+</tr>
+<tr>
+<td><code>municipio</code></td>
+<td>string</td>
+<td><code>"Natal - RN"</code></td>
+</tr>
+<tr>
+<td><code>descricao</code></td>
+<td>string</td>
+<td><code>""</code></td>
+</tr>
+<tr>
+<td><code>grau_formacao</code></td>
+<td>string</td>
+<td><code>"Graduação"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Valores possíveis para <code>grau_formacao</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GRA</code></td>
+<td>Graduação</td>
+</tr>
+<tr>
+<td><code>ESP</code></td>
+<td>Especialização</td>
+</tr>
+<tr>
+<td><code>MES</code></td>
+<td>Mestrado</td>
+</tr>
+<tr>
+<td><code>MEP</code></td>
+<td>Mestrado Profissional</td>
+</tr>
+<tr>
+<td><code>DTR</code></td>
+<td>Doutorado</td>
+</tr>
+<tr>
+<td><code>PDR</code></td>
+<td>Pós-Doutorado</td>
+</tr>
+<tr>
+<td><code>ENF</code></td>
+<td>Ensino Fundamental</td>
+</tr>
+<tr>
+<td><code>ENM</code></td>
+<td>Ensino Médio</td>
+</tr>
+<tr>
+<td><code>EPT</code></td>
+<td>Ed. Prof. Técnica</td>
+</tr>
+<tr>
+<td><code>ERM</code></td>
+<td>Residência Médica</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "formacao_academica": [
+    {
+      "instituicao": "UFRN",
+      "curso": "Medicina",
+      "data_inicio": "2010-03-01",
+      "data_fim": "2016-12-01",
+      "municipio": "Natal - RN",
+      "descricao": "",
+      "grau_formacao": "Graduação"
+    }
+  ]
+}</code></pre>
+<hr />
+<h3 id="cursos_cdp"><code>cursos_cdp</code><a class="headerlink" href="#cursos_cdp" title="Permanent link">&para;</a></h3>
+<p>Cursos realizados na Comunidade de Práticas (CDP). Cacheado por <strong>24 horas</strong> no servidor do Sabiá.</p>
+<p>Retorna um objeto com <code>total</code> e <code>data</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total</code></td>
+<td>int</td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>array</td>
+<td>lista de cursos</td>
+</tr>
+</tbody>
+</table>
+<p>Cada curso em <code>data</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td><code>"Humanização em Saúde"</code></td>
+</tr>
+<tr>
+<td><code>descricao</code></td>
+<td>string</td>
+<td><code>"Curso sobre humanização..."</code></td>
+</tr>
+<tr>
+<td><code>vinculo</code></td>
+<td>string</td>
+<td><code>"CDP"</code></td>
+</tr>
+<tr>
+<td><code>link</code></td>
+<td>string</td>
+<td><code>"https://cdp.saude.gov.br/cursos/123"</code></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td><code>"Concluído"</code></td>
+</tr>
+<tr>
+<td><code>nid</code></td>
+<td>int</td>
+<td><code>123</code></td>
+</tr>
+<tr>
+<td><code>created</code></td>
+<td>string</td>
+<td><code>"2023-06-01"</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td><code>"course"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemplo de resposta:</strong></p>
+<pre class="highlight"><code class="language-json">{
+  "cursos_cdp": {
+    "total": 1,
+    "data": [
+      {
+        "title": "Humanização em Saúde",
+        "descricao": "Curso sobre humanização no atendimento.",
+        "vinculo": "CDP",
+        "link": "https://cdp.saude.gov.br/cursos/123",
+        "status": "Concluído",
+        "nid": 123,
+        "created": "2023-06-01",
+        "type": "course"
+      }
+    ]
+  }
+}</code></pre>
+<hr />
+<h2 id="resumo-dos-scopes">Resumo dos scopes<a class="headerlink" href="#resumo-dos-scopes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Obrigatório</th>
+<th>Cache</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dados_publicos</code></td>
+<td>Sim</td>
+<td>Nenhum</td>
+<td>Banco do Sabiá</td>
+</tr>
+<tr>
+<td><code>cpf</code></td>
+<td>Sim</td>
+<td>Nenhum</td>
+<td>Banco do Sabiá</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Sim</td>
+<td>Nenhum</td>
+<td>Banco do Sabiá</td>
+</tr>
+<tr>
+<td><code>receita_federal</code></td>
+<td>Não</td>
+<td>5 anos</td>
+<td>Webservice RF</td>
+</tr>
+<tr>
+<td><code>cnes</code></td>
+<td>Não</td>
+<td>7 dias</td>
+<td>API do CNES</td>
+</tr>
+<tr>
+<td><code>experiencia_profissional</code></td>
+<td>Não</td>
+<td>Nenhum</td>
+<td>Banco do Sabiá</td>
+</tr>
+<tr>
+<td><code>formacao_academica</code></td>
+<td>Não</td>
+<td>Nenhum</td>
+<td>Banco do Sabiá</td>
+</tr>
+<tr>
+<td><code>cursos_cdp</code></td>
+<td>Não</td>
+<td>24 horas</td>
+<td>API da CDP</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mapeando-campos-para-o-seu-model-sabia_user_attr_map">Mapeando campos para o seu model (<code>SABIA_USER_ATTR_MAP</code>)<a class="headerlink" href="#mapeando-campos-para-o-seu-model-sabia_user_attr_map" title="Permanent link">&para;</a></h2>
+<p>Após a autenticação, os dados retornados pelo Sabiá precisam ser salvos no seu <code>AUTH_USER_MODEL</code>.
+Use <code>SABIA_USER_ATTR_MAP</code> nas settings para declarar esse mapeamento.</p>
+<p>A convenção é <code>{campo_do_model: campo_do_sabiá}</code>:</p>
+<pre class="highlight"><code class="language-python">SABIA_USER_ATTR_MAP = {
+    "username": "cpf",
+    "email":    "email",
+}</code></pre>
+<h3 id="dividindo-o-nome-em-dois-campos">Dividindo o nome em dois campos<a class="headerlink" href="#dividindo-o-nome-em-dois-campos" title="Permanent link">&para;</a></h3>
+<p>Use uma <strong>tupla</strong> como chave para dividir o valor do Sabiá no primeiro espaço:</p>
+<pre class="highlight"><code class="language-python">SABIA_USER_ATTR_MAP = {
+    "username": "cpf",
+    "email":    "email",
+    ("first_name", "last_name"): "name",   # "Maria Silva Santos" → "Maria" + "Silva Santos"
+}</code></pre>
+<h3 id="acessando-campos-de-scopes-opcionais-objeto">Acessando campos de scopes opcionais (objeto)<a class="headerlink" href="#acessando-campos-de-scopes-opcionais-objeto" title="Permanent link">&para;</a></h3>
+<p>O scope <code>receita_federal</code> retorna um <strong>objeto</strong> (dict), portanto seus campos individuais podem
+ser extraídos com notação de ponto:</p>
+<pre class="highlight"><code class="language-python">SABIA_SCOPES = ["cpf", "email", "receita_federal"]
+
+SABIA_USER_ATTR_MAP = {
+    "username":         "cpf",
+    "email":            "email",
+    ("first_name", "last_name"): "name",
+    "nome_mae":         "receita_federal.mae",
+    "sexo":             "receita_federal.sexo",
+    "data_nascimento":  "receita_federal.dtNascimento",
+}</code></pre>
+<p>Se o scope não estiver disponível (usuário não validado, erro de API, etc.), os campos
+correspondentes são simplesmente ignorados — o usuário ainda é criado com os demais atributos.</p>
+<div class="admonition note">
+<p class="admonition-title">Scopes que retornam listas</p>
+<p>Os scopes <code>cnes</code>, <code>experiencia_profissional</code>, <code>formacao_academica</code> e <code>cursos_cdp</code> retornam
+<strong>listas de objetos</strong>, não um objeto único. A notação de ponto não se aplica a eles; para
+persistir esses dados, use o campo virtual <code>fulljson</code> descrito abaixo.</p>
+</div>
+<h3 id="salvando-o-json-completo-fulljson">Salvando o JSON completo (<code>fulljson</code>)<a class="headerlink" href="#salvando-o-json-completo-fulljson" title="Permanent link">&para;</a></h3>
+<p>Use a chave especial <code>"fulljson"</code> para mapear o JSON inteiro retornado pelo Sabiá para um campo
+do seu model (por exemplo, um <code>JSONField</code>):</p>
+<pre class="highlight"><code class="language-python">SABIA_USER_ATTR_MAP = {
+    "username":     "cpf",
+    "email":        "email",
+    "perfil_json":  "fulljson",   # salva todo o payload em um JSONField
+}</code></pre>
+<p>Isso é especialmente útil quando você usa scopes como <code>cnes</code>, <code>experiencia_profissional</code> ou
+<code>cursos_cdp</code> e quer persistir os dados brutos sem precisar ter um campo para cada atributo.</p>
+<h3 id="exemplo-model-com-campo-cpf-nativo-e-nome-unico">Exemplo: model com campo <code>cpf</code> nativo e nome único<a class="headerlink" href="#exemplo-model-com-campo-cpf-nativo-e-nome-unico" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-python"># settings.py
+SABIA_USER_LOOKUP_FIELD = "cpf"   # campo usado no get_or_create
+
+SABIA_USER_ATTR_MAP = {
+    "cpf":   "cpf",
+    "email": "email",
+    "nome":  "name",   # nome completo em um único campo
+}</code></pre>
+<p>Consulte <a href="../configuration/">Configuration</a> para a referência completa de todas as opções.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../mappers/" class="btn btn-neutral float-left" title="Mappers (Mapeamento)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../usage/" class="btn btn-neutral float-right" title="Usage">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-sabia" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-sabia</a>
+        </span>
+    
+    
+      <span><a href="../mappers/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../usage/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
