@@ -23,7 +23,7 @@ class SabiaAuthBackend:
         attr_map = cfg["user_attr_map"]
 
         User = get_user_model()
-        attrs = apply_user_attr_map(sabia_user_info, attr_map)
+        attrs = apply_user_attr_map(sabia_user_info, attr_map, cfg=cfg)
 
         lookup_value = attrs.get(lookup_field)
         if not lookup_value:

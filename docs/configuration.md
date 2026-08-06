@@ -17,6 +17,10 @@
 | `SABIA_API_URL` | `https://api.sabia.ufrn.br` | Sabiá user management API base URL |
 | `SABIA_USER_LOOKUP_FIELD` | `"username"` | User model field used to look up/create users |
 | `SABIA_USER_ATTR_MAP`     | see below | Maps Sabiá response keys to user model fields |
+| `SABIA_USER_INFO_FETCHERS` | `["django_sabia_auth.fetchers.DefaultEndpointsUserInfoFetcher"]` | List of fetcher classes in Chain of Responsibility |
+| `SABIA_USER_INFO_ENDPOINTS` | `["/api/v1/userinfo"]` | List of Sabiá API endpoints to query and merge |
+| `SABIA_USER_INFO_MAPPERS` | `["django_sabia_auth.mappers.DefaultAttrMapUserMapper"]` | List of mapper classes in Chain of Responsibility |
+| `SABIA_USER_MAPPER`       | `"django_sabia_auth.mappers.DefaultSabiaUserMapper"` | Custom mapper class path or class (legacy alias) |
 
 ## Authentication Backend
 
@@ -53,106 +57,71 @@ out of the box. It looks up users by `username` (storing the CPF there) and maps
 | `email`     | `email`          |                             |
 | `name`      | `first_name` + `last_name` | Split on the first space |
 
-### Custom `AUTH_USER_MODEL`
+---
 
-If your user model has different field names or a `cpf` field instead of `username`,
-configure `SABIA_USER_LOOKUP_FIELD` and `SABIA_USER_ATTR_MAP`.
+### Mapeamentos Avançados (`SABIA_USER_ATTR_MAP`)
 
-**`SABIA_USER_LOOKUP_FIELD`** — the user model field used in `get_or_create` as the unique key.
-
-**`SABIA_USER_ATTR_MAP`** — a dict with the convention `{model_field: sabia_key}`:
-
-- **Plain string key**: maps the Sabiá field directly to the given user model field.
-- **Tuple key** `("field_a", "field_b")`: splits the Sabiá value on the first space —
-  the part before the space goes to `field_a`, everything after to `field_b`.
-- **Dotted Sabiá value** (e.g. `"receita_federal.dtNascimento"`): navigates nested dicts
-  in the Sabiá response. Works for `receita_federal`, which returns an object. Nested
-  scopes that returned an error object are silently skipped.
-- **`"fulljson"`**: maps the entire raw Sabiá response dict to the field. Useful for
-  persisting data from list-based scopes (`cnes`, `experiencia_profissional`,
-  `formacao_academica`, `cursos_cdp`) that do not support dot-notation.
-
-### Example: model with a `cpf` field and a single `nome` field
-
+#### 1. Lambdas e Callables
 ```python
-# myapp/models.py
-class Usuario(AbstractBaseUser):
-    cpf = models.CharField(max_length=11, unique=True)
-    email = models.EmailField()
-    nome = models.CharField(max_length=255)
-    ...
-    USERNAME_FIELD = "cpf"
-```
-
-```python
-# settings.py
-AUTH_USER_MODEL = "myapp.Usuario"
-
-SABIA_USER_LOOKUP_FIELD = "cpf"
-SABIA_USER_ATTR_MAP = {
-    "cpf": "cpf",
-    "email": "email",
-    "nome": "name",          # store the full name in a single field
-}
-```
-
-### Example: mapping fields from extended scopes
-
-You can pull data from optional scopes (like `receita_federal`) directly into user model fields
-using dotted Sabiá keys:
-
-```python
-# settings.py
-SABIA_SCOPES = ["cpf", "email", "receita_federal"]
-
 SABIA_USER_ATTR_MAP = {
     "username": "cpf",
-    "email": "email",
-    ("first_name", "last_name"): "name",
-    # Pull birth date from the Receita Federal scope:
-    "data_nascimento": "receita_federal.dtNascimento",
-    "sexo": "receita_federal.sexo",
+    "full_name": lambda info: f"Dr(a). {info.get('name')}",
 }
 ```
 
-If the user's Receita Federal data is unavailable (not validated or an error response), those
-fields are simply skipped — the user is still created with the remaining attributes.
+#### 2. Dicionários de Especificação (`dict` spec) e Transformadores
+```python
+SABIA_USER_ATTR_MAP = {
+    "username": "cpf",
+    "cpf": {
+        "key": "cpf",
+        "transform": "django_sabia_auth.transformers.format_cpf",
+    },
+    "data_nascimento": {
+        "key": "receita_federal.dtNascimento",
+        "transform": "django_sabia_auth.transformers.parse_date",
+    },
+}
+```
 
-### Example: saving the full Sabiá JSON response
+#### 3. Mapeamento de Fotos (URL vs Download para ImageField)
+```python
+# Apenas a URL
+SABIA_USER_ATTR_MAP = {
+    "foto_url": "foto_url",
+}
 
-Use the special `"fulljson"` value to store the entire raw payload returned by Sabiá into a
-single field (e.g. a `JSONField`). This is the recommended approach for list-based scopes such
-as `cnes`, `experiencia_profissional`, `formacao_academica`, and `cursos_cdp`, which do not
-support dot-notation.
+# Download e salvamento em ImageField / FileField do Django:
+SABIA_USER_ATTR_MAP = {
+    "foto": {
+        "key": "foto_url",
+        "transform": "django_sabia_auth.transformers.fetch_image_file",
+    },
+}
+```
+
+#### Transformadores Embutidos (`django_sabia_auth.transformers`)
+- `fetch_image_file`: baixa a imagem e retorna um `ContentFile` do Django.
+- `parse_date`: converte string de data ISO em `datetime.date`.
+- `format_cpf`: formata CPF (`XXX.XXX.XXX-XX`).
+- `to_upper` / `to_lower` / `to_bool`.
+
+---
+
+### Class-Based Mapper Customizado (`SABIA_USER_MAPPER`)
 
 ```python
-# myapp/models.py
-class Usuario(AbstractBaseUser):
-    cpf = models.CharField(max_length=11, unique=True)
-    email = models.EmailField()
-    perfil_json = models.JSONField(default=dict, blank=True)
-    ...
-    USERNAME_FIELD = "cpf"
+# mappers.py
+from django_sabia_auth.mappers import BaseSabiaUserMapper
+
+class CustomSabiaUserMapper(BaseSabiaUserMapper):
+    def map_attributes(self, user_info, attr_map=None):
+        attrs = super().map_attributes(user_info, attr_map)
+        attrs["custom_field"] = True
+        return attrs
 ```
 
 ```python
 # settings.py
-SABIA_SCOPES = ["cpf", "email", "cnes", "experiencia_profissional"]
-
-SABIA_USER_ATTR_MAP = {
-    "cpf":        "cpf",
-    "email":      "email",
-    "perfil_json": "fulljson",   # entire Sabiá payload, including all requested scopes
-}
-```
-
-### Example: minimal model (e-mail as identifier)
-
-```python
-SABIA_USER_LOOKUP_FIELD = "email"
-SABIA_USER_ATTR_MAP = {
-    "email": "email",
-    "cpf": "cpf",
-    ("first_name", "last_name"): "name",
-}
+SABIA_USER_MAPPER = "meu_app.mappers.CustomSabiaUserMapper"
 ```

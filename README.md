@@ -5,7 +5,7 @@
 [![Tests](https://github.com/kelsoncm/django-sabia-auth/actions/workflows/test.yml/badge.svg)](https://github.com/kelsoncm/django-sabia-auth/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/kelsoncm/django-sabia-auth/branch/main/graph/badge.svg)](https://codecov.io/gh/kelsoncm/django-sabia-auth)
 [![Python CI and PyPI Deploy](https://github.com/kelsoncm/django-sabia-auth/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/django-sabia-auth/actions/workflows/publish.yml)
-[![Python Versions](https://img.shields.io/pypi/pyversions/django-dsgovbr.svg)](https://pypi.org/project/django-dsgovbr/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/django-sabia-auth.svg)](https://pypi.org/project/django-sabia-auth/)
 [![Django Versions](https://img.shields.io/badge/django-5.2-blue.svg)](https://www.djangoproject.com/)
 [![Django Versions](https://img.shields.io/badge/django-6.0-blue.svg)](https://www.djangoproject.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,7 +16,9 @@ Django OAuth2 authentication backend for **Sabiá**, Brazil's SUS (Sistema Únic
 ## Installation
 
 ```bash
-pip install django-sabia-auth
+uv add django-sabia-auth
+# or via pip:
+# pip install django-sabia-auth
 ```
 
 ## Configuration

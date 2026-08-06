@@ -6,6 +6,12 @@
 - Django >= 5.2
 - requests >= 2.31
 
+## Install via uv (recommended)
+
+```bash
+uv add django-sabia-auth
+```
+
 ## Install via pip
 
 ```bash
@@ -17,7 +23,7 @@ pip install django-sabia-auth
 ```bash
 git clone https://github.com/kelsoncm/django-sabia-auth.git
 cd django-sabia-auth
-pip install -e ".[dev]"
+uv pip install -e ".[dev]" # or pip install -e ".[dev]"
 ```
 
 ## Add to Django
