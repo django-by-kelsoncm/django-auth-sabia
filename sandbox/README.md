@@ -52,7 +52,7 @@ Ou exporte diretamente no terminal:
 ```bash
 export SABIA_CLIENT_ID="seu-client-id"
 export SABIA_CLIENT_SECRET="seu-client-secret"
-export SABIA_REDIRECT_URI="http://localhost:8000/auth/sabia/callback/"
+export SABIA_REDIRECT_URI="http://localhost:8001/auth/sabia/callback/"
 ```
 
 ### 3. Crie o banco de dados
@@ -91,4 +91,4 @@ Acesse: **http://localhost:8000**
 
 - O banco de dados `db.sqlite3` é criado dentro de `sandbox/` e já está ignorado pelo `.gitignore`
 - Este projeto **não é distribuído** junto com o pacote (veja `pyproject.toml` — só `django_sabia_auth*` é incluído)
-- A `SABIA_REDIRECT_URI` cadastrada no portal do Sabiá deve ser exatamente `http://localhost:8000/auth/sabia/callback/`
+- A `SABIA_REDIRECT_URI` cadastrada no portal do Sabiá deve ser exatamente `http://localhost:8001/auth/sabia/callback/`
