@@ -97,7 +97,7 @@ LOGOUT_REDIRECT_URL = "/"
 # ---------------------------------------------------------------------------
 SABIA_CLIENT_ID = os.environ.get("SABIA_CLIENT_ID", "")
 SABIA_CLIENT_SECRET = os.environ.get("SABIA_CLIENT_SECRET", "")
-SABIA_REDIRECT_URI = os.environ.get("SABIA_REDIRECT_URI", "http://localhost:8001/auth/sabia/callback/")
+SABIA_REDIRECT_URI = os.environ.get("SABIA_REDIRECT_URI", "http://localhost:8000/auth/sabia/callback/")
 SABIA_BASE_URL = os.environ.get("SABIA_BASE_URL", "https://login.sabia.ufrn.br")
 SABIA_API_URL = os.environ.get("SABIA_API_URL", "https://api.sabia.ufrn.br")
 SABIA_SCOPES = os.environ.get("SABIA_SCOPES", "cpf email").split()

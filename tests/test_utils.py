@@ -8,7 +8,7 @@ def test_get_sabia_settings_returns_dict():
     cfg = get_sabia_settings()
     assert cfg["client_id"] == "test-client-id"
     assert cfg["client_secret"] == "test-client-secret"
-    assert cfg["redirect_uri"] == "http://localhost:8001/auth/sabia/callback/"
+    assert cfg["redirect_uri"] == "http://localhost:8000/auth/sabia/callback/"
     assert cfg["scopes"] == ["cpf", "email"]
     assert cfg["base_url"] == "https://login.sabia.ufrn.br"
     assert cfg["api_url"] == "https://api.sabia.ufrn.br"
